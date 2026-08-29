@@ -171,3 +171,84 @@ knitr::kable(bp_df)
 #Above table display as dataframe
 knitr::kable(bp_df)
 ```
+
+**Task 3: List practice**
+
+Continue the previous example. Suppose we now also have data from another experiment where the ‘treat- ment’ was actually a placebo.
+
+We have the following pre-treatment values for subjects 1 through 10 (different set of subjects):
+
+• 138, 135, 147, 117, 152, 134, 114, 121, 131, 130
+
+after treatment, the subjects were measured again (subjects 1 through 10 match)
+
+• 105, 136, 123, 130, 134, 143, 135, 139, 120, 124
+
+**1)** Create a new data frame with this data in it that is similar to the data frame from task 2 (including the new column)
+
+**Solution:**
+
+```{r}
+#pre treatment blood pressure measurements for the placebo group
+placebo_pre <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+#post treatment blood pressure measurements for the placebo group
+placebo_post <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+
+#calculate the cahnces in blood pressure
+placebo_diff <- placebo_pre - placebo_post
+
+#get the subject names
+placebo_names <- paste("Subject", 1:10, sep="_")
+
+#Placebo dataframe creation
+placebo_df <- data.frame(
+  patient = placebo_names,
+  pre_bp = placebo_pre,
+  post_bp = placebo_post,
+  diff_bp = placebo_diff
+)
+
+#adding a column showing weather post treatment blood pressure is below 120
+placebo_df$post_under_120 <- placebo_df$post_bp <120
+
+placebo_df
+```
+
+**2)** Now create and store a list with two elements:
+
+• 1st element named treatment and contains the first data frame you created.
+
+• 2nd element named placebo and contains the second data frame you created.
+
+**Solution:**
+
+```{r}
+#list creation
+bp_list <- list( treatment =bp_df,
+                 placebo = placebo_df)
+
+bp_list
+```
+
+**3)** Access the first list element using three different types of syntax.
+
+**Solution:**
+
+```{r}
+#treatment dataframe using name
+bp_list[["treatment"]]
+
+#treatment dataframe using position
+bp_list[[1]]
+
+#treatment dataframe using $
+bp_list$treatment
+```
+
+**4)** In one line, access the placebo data frame, pre_bp column.
+
+**Solution:**
+
+```{r}
+bp_list$placebo$pre_bp
+```
