@@ -108,7 +108,7 @@ positive_changes <- change_bp[change_bp > 0]
 positive_changes
 ```
 
-From above output we note that the subjects 9, 13 and 17 had increased blood pressure after treatment .
+From above output we note that the subjects 9, 13 and 17 had increased blood pressure after treatment.
 
 **7)** Calculate the average decrease in blood pressure for those where the blood pressure decreased (positive change).
 
@@ -120,3 +120,54 @@ mean(positive_changes)
 ```
 
 The average decrease among the subjects whose blood pressure decreased is 20.647.
+
+**Task 2: Basic Data Frame practice**
+
+**1)** Create a data frame object with four columns corresponding to your data above: patient, pre_bp, post_bp, and diff_bp
+
+**Solution:**
+
+```{r}
+#creating blood pressure dataframe
+bp_df <- data.frame(
+  patient = names(pre_bp),
+  pre_bp=pre_bp,
+  post_bp=post_bp,
+  diff_bp=change_bp
+)
+bp_df
+```
+
+**2)** Return only rows where the diff_bp column is negative. (Use \[ or learn about the subset() function if you’d like. If you use \[, don’t reference the original vector from the first part, access the column of the data frame when looking at making a comparison.)
+
+**Solution:**
+
+```{r}
+#Return rows where blood pressure change is negavtive
+bp_df[bp_df$diff_bp<0, ]
+```
+
+These patients are the same numbers that had increased blood pressure after treatment .
+
+**3)** Add a new column to the data frame corresponding to TRUE if the post_bp is less than 120. Recall you can use \$ to reference a column. If you reference a column that doesn’t exist, and save a vector (of appropriate length in it), that vector becomes a column of your data frame! Similar to the previous question, don’t reference the original vector from the first part, access the column of the data frame when looking at making a comparison.
+
+**Solution:**
+
+```{r}
+#Add True or False based on post treatment blood pressure
+bp_df$post_under_120 <- bp_df$post_bp <120
+bp_df
+```
+
+If post treatment blood pressure is under 120 then its True, else its False.
+
+**4)** Finally, print the data frame out nicely in your final document by modifying the code below appropriately.
+
+knitr::kable(bp_df)
+
+**Solution:**
+
+```{r}
+#Above table display as dataframe
+knitr::kable(bp_df)
+```
