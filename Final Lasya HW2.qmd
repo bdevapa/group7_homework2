@@ -65,7 +65,7 @@ post_bp
 
 ```{r}
 # Calculate the change in blood pressure
-change_bp <- pre_bp - post_bp
+change_bp <- pre_bp - post_bp 
 
 change_bp
 ```
@@ -89,7 +89,7 @@ From the result above we note that the average change is 17.
 
 **Solution:**
 
-A positive change means that the pre-treatment blood pressure was greater than the post-treatment blood pressure. I used the which() to find the positions where the change is greater than zero.
+A positive change means that the pre-treatment blood pressure was greater than the post-treatment blood pressure. I used the 'which()' function to find the positions where the change is greater than zero.
 
 ```{r}
 # Find the subjects with a positive change
