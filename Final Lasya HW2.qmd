@@ -46,7 +46,10 @@ Above I created one vector for the pre-treatment measurements and another vector
 
 **Solution:**
 
+I assigned same subject names to both vectors below to make it easy to identify the measurements for each subject.
+
 ```{r}
+#assigning names to the above created vector elements
 subject_names <- paste("Subject", 1:20, sep = "_")
 
 names(pre_bp) <- subject_names
@@ -67,7 +70,7 @@ change_bp <- pre_bp - post_bp
 change_bp
 ```
 
-A positive value means that the blood pressure decreased after treatment.
+A positive value means that the blood pressure decreased after treatment and its the opposite for a negative value (increased blood pressure).
 
 **4)** Calculate the average decrease in blood pressure across all patients.
 
@@ -80,7 +83,7 @@ I used the mean() function to calculate the average change across all 20 subject
 mean(change_bp)
 ```
 
-From the result above we note that the average change is 17 mmHg.
+From the result above we note that the average change is 17.
 
 **5)** Determine which patients experienced a decrease in blood pressure after treatment (a positive change). Use the which() function to just return the indices (and names) associated with this type of change.
 
@@ -138,6 +141,8 @@ bp_df <- data.frame(
 bp_df
 ```
 
+Dataframe created successfully with four columns as shown above.
+
 **2)** Return only rows where the diff_bp column is negative. (Use \[ or learn about the subset() function if you’d like. If you use \[, don’t reference the original vector from the first part, access the column of the data frame when looking at making a comparison.)
 
 **Solution:**
@@ -159,7 +164,7 @@ bp_df$post_under_120 <- bp_df$post_bp <120
 bp_df
 ```
 
-If post treatment blood pressure is under 120 then its True, else its False.
+If post treatment blood pressure is less than 120 then its value us 'True', else its 'False'.
 
 **4)** Finally, print the data frame out nicely in your final document by modifying the code below appropriately.
 
@@ -168,7 +173,7 @@ knitr::kable(bp_df)
 **Solution:**
 
 ```{r}
-#Above table display as dataframe
+#Above table displayed as dataframe
 knitr::kable(bp_df)
 ```
 
@@ -188,13 +193,15 @@ after treatment, the subjects were measured again (subjects 1 through 10 match)
 
 **Solution:**
 
+I first created vectors for the placebo groups pre and post treatment blood pressure measurement. Then calculated the differences between them to create a data frame similar to the dataframe for treatment above.
+
 ```{r}
 #pre treatment blood pressure measurements for the placebo group
 placebo_pre <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
 #post treatment blood pressure measurements for the placebo group
 placebo_post <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
 
-#calculate the cahnces in blood pressure
+#calculate the chances in blood pressure
 placebo_diff <- placebo_pre - placebo_post
 
 #get the subject names
@@ -208,7 +215,7 @@ placebo_df <- data.frame(
   diff_bp = placebo_diff
 )
 
-#adding a column showing weather post treatment blood pressure is below 120
+#adding a column showing whether post treatment blood pressure is below 120
 placebo_df$post_under_120 <- placebo_df$post_bp <120
 
 placebo_df
@@ -223,7 +230,7 @@ placebo_df
 **Solution:**
 
 ```{r}
-#list creation
+#two lists creation done
 bp_list <- list( treatment =bp_df,
                  placebo = placebo_df)
 
@@ -233,6 +240,8 @@ bp_list
 **3)** Access the first list element using three different types of syntax.
 
 **Solution:**
+
+Accessing treatment data using three different types of status as below.
 
 ```{r}
 #treatment dataframe using name
@@ -249,6 +258,81 @@ bp_list$treatment
 
 **Solution:**
 
+I accessed the 'pre_bp' column from the placebo data frame from the list using '\$' syntax.
+
 ```{r}
+#Access to the placebo pre treatment bloodpressure column
 bp_list$placebo$pre_bp
+```
+
+**Task 4: Control Flow Practice**
+
+**1)** Suppose we want to characterize the post-treatment (or placebo) blood pressure measurement as optimal (≤ 120), borderline (120 \< bp ≤ 130), and high (\> 130). First, create a new column in each data frame from above called status.
+
+You can do this via:
+
+your_df\$status \<- character(20) #or 10 depending on number of observations
+
+Note: You want to add this additional column to the data frames that are stored in your list (R doesn’t do referencing to the original object).
+
+**Solution:**
+
+I add a empty character column called status for both the data frames stores in the list. Also note that treatment data has 20 observations and placebo data has 10 observations.
+
+```{r}
+#empty status column for treatment data
+bp_list$treatment$status <- character(20)
+
+#empty empty status column for placebo data
+bp_list$placebo$status <- character(10)
+
+bp_list$treatment
+bp_list$placebo
+```
+
+**2)** For the non-placebo data frame (within the list), create a for loop and use if/then/else logic to create the status column’s values.
+
+**Solution:**
+
+Created a for loop (through 20 subjects) below to classify the treatment blood pressure into the 3 stages - 'optimal', 'borderline' and 'high'. As mentioned above, the post-treatment blood pressure measurement as optimal (\<= 120), borderline (120 \< bp \<= 130), and high (\> 130). Same logic is applied using if, else and else if in the code below.
+
+```{r}
+#Using for loop to classify treatment blood pressure into 3 stages 
+for (i in 1:20){
+  if (bp_list$treatment$post_bp[i] <= 120){
+    bp_list$treatment$status[i] <- "optimal"
+  }
+  else if(bp_list$treatment$post_bp[i] <= 130){
+    bp_list$treatment$status[i] <- "borderline"
+  } else {
+    bp_list$treatment$status[i] <- "high"
+  }
+}
+
+bp_list$treatment
+```
+
+**3)** Repeat for the placebo data frame (within the list). • In the final document, make sure that all code chunks show (and are evaluated). Use headings to separate the sections. Write text before each code chunk explaining what you are trying to do. Use markdown where appropriate (to create lists, bold things, etc.).
+
+Include some basic comments in the code where needed.
+
+**Solution:**
+
+Same process as above is repeated, but for placebo data with 10 subjects. Similarly as mentioned above the placebo blood pressure measurement as optimal (\<=120), borderline (120 \< bp \<= 130), and high (\> 130). Same logic is applied using if, else and else if in the code below.
+
+```{r}
+#Using for loop to classify placebo blood pressure into 3 stages 
+for(i in 1:10){
+  if (bp_list$placebo$post_bp[i] <= 120){
+    bp_list$placebo$status[i] <- "optimal"
+  }
+  else if(bp_list$placebo$post_bp[i] <= 130){
+    bp_list$placebo$status[i] <- "borderline"
+  } else {
+    bp_list$placebo$status[i] <- "high"
+  }
+}
+
+bp_list$placebo
+
 ```
