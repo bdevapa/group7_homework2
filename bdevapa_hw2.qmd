@@ -172,6 +172,9 @@ for(i in 1:nrow(treatment_df)) {
     treatment_df$status[i] <- 'high'
   }
 }
+
+treatment_df
+
 ```
 
 ## 3. Assign status column to blood_pressure_df (non-placebo data frame)
@@ -188,4 +191,7 @@ for(i in 1:nrow(placebo_df)) {
     placebo_df$status[i] <- 'high'
   }
 }
+
+placebo_df
+
 ```
