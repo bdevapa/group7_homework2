@@ -1,0 +1,191 @@
+---
+title: "bdevapa_hw2.qmd"
+format: html
+editor: visual
+---
+
+# Task 1: Basic Vector Practice
+
+## 1.q Pre-treatment blood pressure
+
+```{r}
+pre_treatment_bp <- c(130, 128, 116, 124, 133, 134, 118, 126, 114, 127, 141, 138, 128, 140, 137, 131, 120, 128, 139, 135)
+```
+
+## 1.b Post-treatment blood pressure
+
+```{r}
+post_treatment_bp <- c(114, 98, 113, 99, 107, 116, 113, 111, 119, 117, 101, 119, 130, 122, 106, 106, 124, 102, 117, 113)
+```
+
+## 2. Assign names to both vectors
+
+```{r}
+# create names once and then reuse them 
+subject_names <- paste("Subject", 1:20, sep = "-")
+names(pre_treatment_bp) <- c(subject_names)
+names(post_treatment_bp) <- c(subject_names)
+pre_treatment_bp
+pre_treatment_bp
+```
+
+## 3. Change in blood pressure after treatment
+
+```{r}
+change_in_bp <- pre_treatment_bp - post_treatment_bp
+change_in_bp
+```
+
+## 4. Average decrease in blood pressure accorss all patients
+
+```{r}
+avg_decrease_in_bp <- mean(change_in_bp)
+avg_decrease_in_bp
+```
+
+## 5. Patients experiencing positive change after treatment
+
+```{r}
+patients_with_positive_change <- which(change_in_bp > 0)
+patients_with_positive_change
+```
+
+## 6. Subset of the vector of differences with positive change after treatment
+
+```{r}
+positive_difference_in_bp <- change_in_bp[change_in_bp > 0]
+positive_difference_in_bp
+```
+
+## 7. Average of positive differences after treatment after treatment
+
+```{r}
+avg_positive_differennce_in_bp <- mean(positive_difference_in_bp)
+avg_positive_differennce_in_bp
+```
+
+# Task 2: Basic Data Frame practice
+
+## 1. Create blood pressure data frame
+
+```{r}
+treatment_df <- data.frame(
+  patient = subject_names,
+  pre_bp = pre_treatment_bp,
+  post_bp = post_treatment_bp,
+  diff_bp = change_in_bp
+)
+
+str(treatment_df)
+```
+
+## 2. Patients with increased blood pressure after treatment
+
+```{r}
+patients_with_increased_blood_pressure_df <- treatment_df[treatment_df$diff_bp < 0, ]
+
+patients_with_increased_blood_pressure_df
+```
+
+## 3. Add new column to label healthy blood pressure post treatment
+
+```{r}
+treatment_df$healthy_bp_post_treatment <- treatment_df$post_bp < 120
+treatment_df
+```
+
+## 4. Print data frame
+
+```{r}
+knitr::kable(treatment_df)
+```
+
+# Task 3: List practice
+
+## 1. Placebo treatment vectors and then data frame
+
+```{r}
+pre_placebo_bp <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+post_placebo_bp <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+placebo_subject_names <- paste("Subject", 21:30, sep = "-")
+names(pre_placebo_bp) <- c(placebo_subject_names)
+names(pre_placebo_bp) <- c(placebo_subject_names)
+placebo_df <- data.frame(
+  pre_bp = pre_placebo_bp,
+  post_bp = post_placebo_bp
+)
+
+str(placebo_df)
+```
+
+## 2. Create list with data frames
+
+```{r}
+treatment_list <- list(
+  treatment = treatment_df,
+  placebo = placebo_df
+)
+```
+
+## 3. Access the first element with 3 different syntax
+
+```{r}
+treatment_list$treatment
+treatment_list[1]
+treatment_list[[1]]
+
+```
+
+## 3. In one line access placebo data frame, pre_bp column
+
+```{r}
+treatment_list$placebo$pre_bp
+
+```
+
+# Task 4: Control Flow Practice
+
+## 1. Add new column to characterize post treatment blood flow as optimal (≤ 120), borderline (120 \< bp ≤ 130), and high (\> 130)
+
+```{r}
+# instead of hardcoding use nrow to find the row dimension of the data frame 
+treatment_df$status <- character(nrow(treatment_df))
+str(treatment_df)
+
+placebo_df$status <- character(nrow(placebo_df))
+str(placebo_df)
+
+
+```
+
+## 2. Assign status column to blood_pressure_df (non-placebo data frame)
+
+```{r}
+for(i in 1:nrow(treatment_df)) {
+  # print(i)
+  # print(blood_pressure_df$post_bp[i])
+  if(treatment_df$post_bp[i] <= 120) {
+     treatment_df$status[i] <- 'optimal'
+  } else if(treatment_df$post_bp[i] <= 130) {
+    treatment_df$status[i] <- 'borderline'
+  } else if(treatment_df$post_bp[i] > 130) {
+    treatment_df$status[i] <- 'high'
+  }
+}
+```
+
+## 3. Assign status column to blood_pressure_df (non-placebo data frame)
+
+```{r}
+for(i in 1:nrow(placebo_df)) {
+  # print(i)
+  # print(blood_pressure_df$post_bp[i])
+  if(placebo_df$post_bp[i] <= 120) {
+     placebo_df$status[i] <- 'optimal'
+  } else if(placebo_df$post_bp[i] <= 130) {
+    placebo_df$status[i] <- 'borderline'
+  } else if(placebo_df$post_bp[i] > 130) {
+    placebo_df$status[i] <- 'high'
+  }
+}
+```
