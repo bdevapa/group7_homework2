@@ -1,0 +1,158 @@
+---
+title: "awu3_hw2"
+format: html
+editor: visual
+---
+
+### Task 1: Basic Vector Practice
+
+-   Goal: Create 2 basic vectors of blood pressure patient before and after treatment and do some basic functions on the vector
+
+```{r}
+
+# (1) create vector with pre-treatment values
+pre_bp <- c(130, 128, 116, 124, 133, 
+            134, 118, 126, 114, 127, 
+            141, 138, 128, 140, 137, 
+            131, 120, 128, 139, 135)
+
+# (1) created vector with post-treatment values
+post_bp <- c(114, 98, 113, 99, 107, 116,
+             113, 111, 119, 117, 101, 119, 
+             130, 122, 106, 106, 124, 102, 
+             117, 113)
+
+# (2) assign names
+names(pre_bp) <- paste("Subject", 1:20, sep = "_")
+
+names(post_bp) <- paste("Subject", 1:20, sep = "_")
+
+# (3) vector with post blood pressure - pre blood pressure
+diff_bp <- c(post_bp - pre_bp)
+
+diff_bp
+
+# (4) average diff in blood pressure
+mean(diff_bp)
+
+# (5) find patients who had a decrease in blood pressure after treatment
+which(diff_bp < 0)
+
+# (6) Only return(subset of the vector) positive change in the difference vector
+x <- c(9, 13, 17)
+diff_bp[-x]
+
+
+# (7) calculate average decrease in blood pressure from those with a positive change
+mean(diff_bp[-x])
+
+
+```
+
+### Task 2: Basic Data Frame Practice
+
+-   Goal: From the previous example create a new dataframe and use some conditional logic to return certain rows and create a new column
+
+```{r}
+
+# make patient names vector
+patient <- c(names(pre_bp))
+
+# (1) create data frame with 4 cols patient, pre_bp, post_bp, and diff_bp
+bp_df <- data.frame(patient, pre_bp, post_bp, diff_bp,row.names= NULL )
+
+bp_df
+
+# (2) returns rows where diff_bp is negative
+subset(bp_df, diff_bp < 0)
+
+# (3) create column where TRUE if post bp is less than 120 
+
+bp_df$optimal_bp <- bp_df$post_bp < 120
+
+# (4) print data frame 
+
+knitr::kable(bp_df)
+
+```
+
+### Task 3: List Practice
+
+-   Goal: Create a list of dataframes and access the elements in the list
+
+```{r}
+# (1) create new vectors for placebo treatments df
+
+pre_bp_placebo <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+
+post_bp_placebo <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+
+diff_bp_placebo <- post_bp_placebo - pre_bp_placebo
+
+patient_placebo <- paste("Subject", 1:10, sep = "_")
+  
+# (1) create new data frame for placebo patients
+placebo_df <- data.frame(patient_placebo,pre_bp_placebo, post_bp_placebo,diff_bp_placebo)
+
+# create column for post bp <120
+
+placebo_df$optimal_bp<- placebo_df$post_bp_placebo < 120
+
+placebo_df
+
+# (2) create list with 2 df elements created above
+
+df_list <- list(treatment = bp_df, placebo = placebo_df)
+
+# (3) access df_list[1] multiple ways
+df_list[[1]]
+
+df_list$treatment
+
+df_list[1]
+
+# (4) access placebo df pre_bp column
+df_list$placebo$pre_bp_placebo
+```
+
+### Task 4: Control Flow Practice
+
+-   Goal: From the previous example create a new status column using for loops with conditional logic to label rows
+
+```{r}
+# (1)create new column status for both data frames
+df_list$treatment$status <- character(20)
+
+df_list$placebo$status <- character(10)
+
+# (2) create status column values for status in treatment df
+for (i in seq_along(df_list$treatment$post_bp)) {
+  if (df_list$treatment$post_bp[i] <= 120) {
+    df_list$treatment$status[i] = 'optimal'
+  }
+  else if (df_list$treatment$post_bp[i] <= 130) {
+    df_list$treatment$status[i] = 'boderline'
+  }
+  else {
+    df_list$treatment$status[i] = 'high'
+  }
+} 
+
+df_list$treatment
+
+# (3) create status column values for status in placebo df
+for (i in seq_along(df_list$placebo$post_bp_placebo)) {
+  if (df_list$placebo$post_bp_placebo[i] <= 120) {
+    df_list$placebo$status[i] = 'optimal'
+  }
+  else if (df_list$placebo$post_bp_placebo[i] <= 130) {
+    df_list$placebo$status[i] = 'boderline'
+  }
+  else {
+    df_list$placebo$status[i] = 'high'
+  }
+} 
+
+df_list$placebo
+
+```
