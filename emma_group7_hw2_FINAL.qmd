@@ -1,0 +1,120 @@
+---
+title: "emma_group7_hw2_FINAL"
+format: html
+editor: visual
+---
+
+# TASK ONE 
+
+*This task involves creating two vectors for pre and post measurements, assigning names, calculating mathematical values related to blood pressure measurements, and subsetting the vectors.*
+
+```{r}
+#Q1. Create two vectors, one for pre measurements and one for post measurements
+pre_bp <- c(130, 128, 116, 124, 133, 134, 118, 126, 114, 127, 141, 138, 128, 140, 137, 131, 120, 128, 139, 135)
+post_bp <- c(114, 98, 113, 99, 107, 116, 113, 111, 119, 117, 101, 119, 130, 122, 106, 106, 124, 102, 117, 113)
+
+#Q2. Assign names to vector elements
+patient <- paste('Subject', 1:20, sep = '_')
+
+#Q3. Calculate change in blood pressure for each patient
+diff_bp <- pre_bp-post_bp
+diff_bp
+
+#Q4. Calculate average decrease in blood pressure across all patients
+avg_dec <- mean(diff_bp)
+avg_dec
+
+#Q5. Determine which patients experienced a positive change
+which(diff_bp > 0)
+
+#Q6. Subset vector, return only positive values
+pos_change <- diff_bp[diff_bp > 0]
+pos_change
+
+#Q7. Calculate average decrease in blood pressure for those who experienced a positive change
+avg_pos_change <- mean(pos_change)
+avg_pos_change
+```
+
+# TASK TWO
+
+*This task involves the creation of a data frame as well as practice with adding columns and returning specific rows. Finally, the data frame is printed using **knitr**.*
+
+```{r}
+#Q1. Create a data frame with the columns: patient, pre_bp, post_bp, and diff_bp
+data_frame <- data.frame(patient, pre_bp, post_bp, diff_bp)
+data_frame
+
+#Q2. Return only rows where diff_bp column is negative
+data_frame[data_frame$diff_bp < 0, ]
+
+#Q3. Add new column corresponding to TRUE if post_bp < 120
+data_frame$post_bp_less_than_120 <- data_frame$post_bp < 120
+data_frame
+
+#Q4. Print data frame out nicely
+knitr::kable(data_frame)
+```
+
+# TASK THREE
+
+*This task involves creating a new data frame with our placebo measurements and then combining the two data frames into a list. It also includes practice with syntax regarding lists.*
+
+```{r}
+#Q1. Create new data frame
+pre_trt_2 <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+post_trt_2 <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+patient_2 <- paste('Subject', 1:10, sep = '_')
+diff_bp_2 <- pre_trt_2-post_trt_2
+data_frame_2 <- data.frame(patient_2, pre_trt_2, post_trt_2, diff_bp_2)
+data_frame_2$post_bp_less_than_120_2 <- data_frame_2$post_trt_2 < 120
+data_frame_2
+
+#Q2. Create and store a list with two elements
+placebo_trt_list <- list(treatment = data_frame, placebo = data_frame_2)
+placebo_trt_list
+
+#Q3. Access first list element using three types of syntax
+placebo_trt_list[[1]]
+placebo_trt_list[['treatment']]
+placebo_trt_list$treatment
+
+#Q4. In one line, access the placebo dataframe, pre_bp column
+placebo_trt_list$placebo$pre_trt_2
+```
+
+# TASK FOUR
+
+*This task involves making a new column called **status** for both data frames and making a **for** loop that would create this column's values, those being **Optimal**, **Borderline**, and **High**.*
+
+```{r}
+#Q1. Create a new column in each data frame from above called status
+placebo_trt_list$treatment$status <- character(20)
+placebo_trt_list$placebo$status <- character(10)
+
+#Q2. For the non-placebo data frame, create a for loop and use if/then/else logic to create the status column's values
+for(i in 1:20){
+if(placebo_trt_list$treatment$post_bp[i] <= 120){
+  placebo_trt_list$treatment$status[i] <- 'Optimal'
+}
+else if(placebo_trt_list$treatment$post_bp[i] <= 130){
+  placebo_trt_list$treatment$status[i] <- 'Borderline'
+}
+else{placebo_trt_list$treatment$status[i] <- 'High'
+}
+}
+placebo_trt_list$treatment
+
+#Q3. Repeat above steps for placebo data frame
+for(i in 1:10){
+  if(placebo_trt_list$placebo$post_bp[i] <= 120){
+    placebo_trt_list$placebo$status[i] <- 'Optimal'
+  }
+else if(placebo_trt_list$placebo$post_bp[i] <= 130){
+  placebo_trt_list$placebo$status[i] <- 'Borderline'
+}
+else{placebo_trt_list$placebo$status[i] <- 'High'
+}
+}
+placebo_trt_list$placebo
+```
