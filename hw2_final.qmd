@@ -222,7 +222,7 @@ for (i in 1:20) {
     bp_list$treatment$status[i] <- "optimal"
   }
   else if (bp_list$treatment$post_bp[i] <= 130) {
-    bp_list$treatment$status[i] <- "boderline"
+    bp_list$treatment$status[i] <- "borderline"
   } else {
     bp_list$treatment$status[i] <- "high"
   }
@@ -241,7 +241,7 @@ for (i in 1:10) {
     bp_list$placebo$status[i] <- "optimal"
   }
   else if (bp_list$placebo$post_bp[i] <= 130) {
-    bp_list$placebo$status[i] <- "boderline"
+    bp_list$placebo$status[i] <- "borderline"
   } else {
     bp_list$placebo$status[i] <- "high"
   }
